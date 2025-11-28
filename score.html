@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Quiz - IPA Pronunciation</title>
+<link rel="stylesheet" href="style/quiz.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">IPA Quiz</div>
+    <div id="timer" class="timer">30:00</div>
+  </header>
+
+  <main class="container fade-in">
+    <div id="quiz-area" class="quiz-area"></div>
+    
+    <div id="navigation-controls" class="controls">
+      </div>
+  </main>
+
+  <div id="player" class="audio-player" draggable="true">
+    <div class="player-top"><span id="player-title">Audio</span>
+      <div>
+        <button id="minimize" class="small">_</button>
+      </div>
+    </div>
+    <div class="player-body">
+      <audio id="audio" controls></audio>
+      <div class="player-actions">
+        <input id="audio-word" placeholder="word (optional)" />
+        <button id="play-word" class="small">Play</button>
+      </div>
+      <p class="help">Audio & IPA fetched from dictionaryapi.dev when available.</p>
+    </div>
+  </div>
+
+<script src="js/quiz.js"></script>
+</body>
+</html>

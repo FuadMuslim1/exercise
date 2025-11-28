@@ -1,0 +1,12 @@
+*{box-sizing:border-box;font-family:Inter, system-ui;}
+body{margin:0;background:linear-gradient(180deg,#fff,#f7f8ff);min-height:100vh;}
+.wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+.card{width:100%;max-width:800px;background:white;padding:28px;border-radius:12px;box-shadow:0 12px 40px rgba(15,23,42,0.06);}
+.result-card{display:flex;align-items:center;gap:20px;justify-content:space-between;padding:18px;background:linear-gradient(90deg,#eef2ff,#fbfdff);border-radius:12px;margin:12px 0;}
+.big{font-size:32px;font-weight:800;color:#0f172a;}
+.grade{font-weight:700;color:#475569;}
+.actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;}
+.btn{padding:10px 14px;border-radius:10px;border:none;background:#6b6cff;color:white;font-weight:600;cursor:pointer;}
+.btn.ghost{background:transparent;color:#475569;border:1px solid #e6e9f2;}
+.fade-in{animation:fadeIn .45s ease both;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}

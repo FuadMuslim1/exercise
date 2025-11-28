@@ -1,0 +1,26 @@
+*{box-sizing:border-box;font-family:Inter, system-ui;}
+body{margin:0;background:linear-gradient(180deg,#fbfdff,#f3f4ff);min-height:100vh;}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:transparent;}
+.brand{font-weight:700;color:#111827;}
+.timer{background:#0f172a;color:white;padding:8px 12px;border-radius:10px;box-shadow:0 6px 20px rgba(15,23,42,0.08);}
+.container{max-width:980px;margin:18px auto;padding:18px;}
+.quiz-area{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;}
+.card{background:white;border-radius:12px;padding:16px;box-shadow:0 8px 30px rgba(15,23,42,0.06);transition:transform .18s,box-shadow .18s;}
+.card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(15,23,42,0.08);}
+.question{font-weight:700;margin-bottom:10px;}
+.options{display:flex;flex-direction:column;gap:8px;}
+.option{padding:10px;border-radius:8px;border:1px solid #eef2ff;cursor:pointer;transition:transform .12s,box-shadow .12s;}
+.option:hover{transform:translateX(6px);}
+.option.selected{background:linear-gradient(90deg,#eef2ff,#f3f4ff);border-color:#c7d2fe;}
+.controls{display:flex;gap:10px;justify-content:center;margin-top:18px;}
+.btn{padding:10px 14px;border-radius:10px;border:none;background:#6b6cff;color:white;font-weight:600;cursor:pointer;}
+.btn.ghost{background:transparent;color:#475569;border:1px solid #e6e9f2;}
+.btn.accent{background:#10b981;}
+.audio-player{position:fixed;right:18px;bottom:18px;width:260px;background:white;border-radius:10px;box-shadow:0 12px 40px rgba(15,23,42,0.08);overflow:hidden;transition:transform .18s,opacity .2s;}
+.player-top{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:linear-gradient(90deg,#6b6cff,#8b5cf6);color:white;}
+.player-body{padding:10px;}
+.small{padding:6px 8px;border-radius:8px;border:none;background:#eef2ff;cursor:pointer;margin-left:6px;}
+.player-body input{width:100%;padding:8px;border-radius:8px;border:1px solid #eef2ff;margin-top:8px;}
+.help{font-size:12px;color:#6b7280;margin-top:8px;}
+.fade-in{animation:fadeIn .35s ease both;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}

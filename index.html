@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login - IPA Pronunciation Quiz</title>
+  <link rel="stylesheet" href="style/login.css">
+</head>
+<body>
+  <main class="container fade-in">
+    <div class="card">
+      <h1>IPA Pronunciation Quiz</h1>
+      <p class="sub">Please login to continue</p>
+      <label>Name
+        <input id="name" type="text" placeholder="Your name" />
+      </label>
+      <label>Password
+        <input id="password" type="password" placeholder="Password" />
+      </label>
+      <div class="row">
+        <button id="back" class="btn ghost">Back</button>
+        <button id="login" class="btn">Login</button>
+      </div>
+      <p id="error" class="error" aria-live="polite"></p>
+    </div>
+  </main>
+  <script src="js/login.js"></script>
+</body>
+</html>
