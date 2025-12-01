@@ -1,37 +1,78 @@
-// js/score.js
+// File: js/score.js
+
+// =======================================================
+// === SESSION CHECK (12 HOUR EXPIRATION) ===
+// =======================================================
+
+const EXPIRATION_TIME = 43200000; // 12 hours in ms (Harus didefinisikan di setiap file yang dilindungi)
+
+function checkAuthAndExpiration() {
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    const loginTimestamp = localStorage.getItem('loginTimestamp');
+    
+    // Cek Status Login dan Keberadaan Timestamp
+    if (isLoggedIn !== 'true' || !loginTimestamp) {
+        returnToLogin("Sesi tidak ditemukan. Mohon login terlebih dahulu.");
+        return false;
+    }
+
+    // Cek Waktu Kedaluwarsa
+    const currentTime = Date.now();
+    const timeElapsed = currentTime - parseInt(loginTimestamp);
+
+    if (timeElapsed > EXPIRATION_TIME) {
+        localStorage.clear(); 
+        returnToLogin("Sesi Anda telah kedaluwarsa (12 jam). Mohon login kembali.");
+        return false;
+    }
+    return true; 
+}
+
+function returnToLogin(message) {
+    alert(message);
+    window.location.href = "index.html";
+}
+
+// PANGGIL FUNGSI INI SEBELUM KODE LAIN BERJALAN
+if (!checkAuthAndExpiration()) {
+    // Stop execution if authentication fails
+    throw new Error("Authentication failed, redirected to login.");
+}
+
+// =======================================================
+// === KODE INTI SCORE ===================================
+// =======================================================
 
 // Array Jawaban Benar (disalin dari quiz.js agar skor dapat dihitung)
-// js/score.js
-// Array LOCAL - Transkripsi IPA yang Benar (American English - GA)
 const LOCAL = [
     {word:'ship', ipa:'/ʃɪp/'},{word:'sheep',ipa:'/ʃiːp/'},{word:'beat',ipa:'/biːt/'},{word:'bit',ipa:'/bɪt/'},
-    {word:'bed',ipa:'/bɛd/'},{word:'bad',ipa:'/bæd/'},{word:'father',ipa:'/ˈfɑːðər/'},{word:'lot',ipa:'/lɑt/'}, // <--- DIBUAT GA
+    {word:'bed',ipa:'/bɛd/'},{word:'bad',ipa:'/bæd/'},{word:'father',ipa:'/ˈfɑːðər/'},{word:'lot',ipa:'/lɑt/'},
     {word:'thought',ipa:'/θɔːt/'},{word:'thin',ipa:'/θɪn/'},{word:'this',ipa:'/ðɪs/'},{word:'thing',ipa:'/θɪŋ/'},
     {word:'measure',ipa:'/ˈmɛʒər/'},{word:'judge',ipa:'/dʒʌdʒ/'},{word:'cake',ipa:'/keɪk/'},{word:'say',ipa:'/seɪ/'},
     {word:'go',ipa:'/ɡoʊ/'},{word:'no',ipa:'/noʊ/'},{word:'house',ipa:'/haʊs/'},{word:'boy',ipa:'/bɔɪ/'},
-    {word:'put',ipa:'/pʊt/'},{word:'foot',ipa:'/fʊt/'},{word:'nurse',ipa:'/nɜːrs/'},{word:'bird',ipa:'/bɜːrd/'}, // <--- DIBUAT GA
-    {word:'happy',ipa:'/ˈhæpi/'},{word:'camera',ipa:'/ˈkæmərə/'},{word:'orange',ipa:'/ˈɔːrəndʒ/'},{word:'gas',ipa:'/ɡæs/'}, // <--- DIBUAT GA
-    {word:'water',ipa:'/ˈwɔːtər/'},{word:'mirror',ipa:'/ˈmɪrər/'} // <--- DIBUAT GA
+    {word:'put',ipa:'/pʊt/'},{word:'foot',ipa:'/fʊt/'},{word:'nurse',ipa:'/nɜːrs/'},{word:'bird',ipa:'/bɜːrd/'},
+    {word:'happy',ipa:'/ˈhæpi/'},{word:'camera',ipa:'/ˈkæmərə/'},{word:'orange',ipa:'/ˈɔːrəndʒ/'},{word:'gas',ipa:'/ɡæs/'},
+    {word:'water',ipa:'/ˈwɔːtər/'},{word:'mirror',ipa:'/ˈmɪrər/'}
 ];
 
-// Ambil Data dari Local Storage
-const stored = localStorage.getItem('quiz_answers');
-const name = localStorage.getItem('quiz_name') || 'Student'; // Menggunakan nama jika disimpan
+// Ambil Data dari Local Storage (Menggunakan kunci baru: 'quizAnswers' dan 'currentUserName')
+const storedAnswers = localStorage.getItem('quizAnswers');
+const name = localStorage.getItem('currentUserName') || 'Student'; // Menggunakan kunci baru
 
 document.getElementById('name').textContent = name;
 
 let answers = [];
 try { 
-    answers = stored ? JSON.parse(stored) : []; 
+    answers = storedAnswers ? JSON.parse(storedAnswers) : []; 
 } catch(e) { 
     answers = []; 
 }
 
-// ⚠️ Logika PENTING: Jika tidak ada jawaban, kembali ke halaman kuis (pencegahan)
+// Logika PENTING: Jika tidak ada jawaban, alihkan untuk mencegah error
 if (answers.length === 0 || answers.length < LOCAL.length) {
-    alert('Data kuis tidak lengkap atau tidak ditemukan. Silakan coba lagi.');
-    window.location.href = 'rules.html'; // Mengalihkan ke halaman awal kuis
-    // Kita hentikan eksekusi script selanjutnya
+    alert('Data kuis tidak lengkap atau tidak ditemukan. Mohon ulangi kuis.');
+    window.location.href = 'rules.html'; // Mengalihkan ke halaman aturan
+    throw new Error("Missing quiz data.");
 }
 
 
@@ -40,7 +81,6 @@ let correct = 0;
 for(let i = 0; i < LOCAL.length; i++){
     const right = LOCAL[i].ipa;
     const given = answers[i];
-    // Cek: Jawaban harus ada (tidak null) DAN harus sama dengan IPA yang benar
     if(given && given === right) {
         correct++;
     }
@@ -109,8 +149,10 @@ function finalize(){
         key.appendChild(li);
     });
     
-    // Setelah selesai, hapus data kuis dari Local Storage (opsional, tapi disarankan)
-    // localStorage.removeItem('quiz_answers');
+    // !!! PENTING: Hapus semua data progres kuis setelah skor final ditampilkan !!!
+    localStorage.removeItem('quizAnswers');
+    localStorage.removeItem('quizIndex');
+    localStorage.removeItem('timeLeft');
 }
 
 // Mulai animasi
@@ -118,13 +160,11 @@ requestAnimationFrame(animate);
 
 // --- Event Listeners untuk Navigasi ---
 document.getElementById('home').addEventListener('click', () => { 
-    // Bersihkan jawaban sebelum kembali ke home
-    localStorage.removeItem('quiz_answers'); 
+    // Kembali ke home (login screen)
     window.location.href = 'index.html'; 
 });
 
 document.getElementById('retry').addEventListener('click', () => { 
-    // Bersihkan jawaban dan mulai ulang dari rules
-    localStorage.removeItem('quiz_answers'); 
+    // Mulai ulang dari rules (semua data progres sudah dihapus di finalize())
     window.location.href = 'rules.html'; 
 });
