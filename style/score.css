@@ -1,12 +1,212 @@
-*{box-sizing:border-box;font-family:Inter, system-ui;}
-body{margin:0;background:linear-gradient(180deg,#fff,#f7f8ff);min-height:100vh;}
-.wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
-.card{width:100%;max-width:800px;background:white;padding:28px;border-radius:12px;box-shadow:0 12px 40px rgba(15,23,42,0.06);}
-.result-card{display:flex;align-items:center;gap:20px;justify-content:space-between;padding:18px;background:linear-gradient(90deg,#eef2ff,#fbfdff);border-radius:12px;margin:12px 0;}
-.big{font-size:32px;font-weight:800;color:#0f172a;}
-.grade{font-weight:700;color:#475569;}
-.actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;}
-.btn{padding:10px 14px;border-radius:10px;border:none;background:#6b6cff;color:white;font-weight:600;cursor:pointer;}
-.btn.ghost{background:transparent;color:#475569;border:1px solid #e6e9f2;}
-.fade-in{animation:fadeIn .45s ease both;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+/* ========================================================= */
+/* BASE STYLES & UTILITIES (Disesuaikan dari kode Anda)      */
+/* ========================================================= */
+
+*{
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, system-ui;
+}
+
+body {
+    margin: 0;
+    background: #f4f6f9; /* Latar belakang seragam */
+    min-height: 100vh;
+}
+
+h1, h2, h3, h4 {
+    color: #1f2937;
+}
+
+.topbar {
+    /* Salin styling topbar dari quiz.css jika ada, atau gunakan default */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.brand {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: #10b981; /* Primary Color */
+}
+
+.timer {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #4b5563; 
+}
+
+.container {
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* ========================================================= */
+/* SCORE CARD ENHANCEMENT (Menggantikan .card Anda)          */
+/* ========================================================= */
+
+.result-card {
+    /* Menggantikan .card lama dengan tampilan hasil yang menonjol */
+    background: white;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    text-align: center;
+    margin: 40px auto;
+}
+
+.result-card h2 {
+    font-size: 1.8em;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.result-card hr {
+    margin: 20px auto;
+    width: 100px;
+    border: none;
+    border-top: 3px solid #e5e7eb;
+}
+
+/* --- Display Skor Utama --- */
+
+.score-display {
+    margin: 30px 0;
+}
+
+#score {
+    /* Angka Persentase sangat besar */
+    font-size: 8em; 
+    font-weight: 900;
+    line-height: 1.1;
+    transition: color 0.5s ease;
+    margin: 0;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Color Coding Grade (Membutuhkan perubahan di score.js) */
+.grade-label {
+    font-size: 1.8em;
+    font-weight: 800;
+    margin-top: 10px;
+    display: block;
+    padding: 5px 0;
+}
+
+.grade-A, .grade-B { color: #10b981; } /* Hijau */
+.grade-C { color: #fbbf24; } /* Kuning */
+.grade-D { color: #f87171; } /* Merah */
+
+.summary-details {
+    font-size: 1.1em;
+    color: #4b5563;
+    margin-bottom: 30px;
+}
+
+/* ========================================================= */
+/* TINJAUAN JAWABAN (KEY)                                    */
+/* ========================================================= */
+
+.result-card h4 {
+    text-align: left;
+    margin-top: 40px;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 5px;
+}
+
+.answer-key {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+}
+
+.answer-key li {
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: background-color 0.3s;
+    line-height: 1.5;
+}
+
+.answer-key li strong {
+    font-size: 1.1em;
+    padding-right: 10px;
+    color: #1f2937;
+}
+
+/* Styling feedback visual dari JS (warna yang disuntikkan) */
+
+/* Jawaban Benar */
+.answer-key li[style*="065f46"] { 
+    background-color: #f0fdf4; /* Hijau Sangat Muda */
+    border-left: 5px solid #065f46;
+}
+
+/* Jawaban Salah */
+.answer-key li[style*="dc2626"] { 
+    background-color: #fff1f2; /* Merah Sangat Muda */
+    border-left: 5px solid #dc2626;
+}
+
+/* ========================================================= */
+/* TOMBOL (ACTIONS)                                          */
+/* ========================================================= */
+
+.actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center; /* Tombol di tengah */
+    margin-top: 30px;
+}
+
+.btn {
+    padding: 12px 30px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s;
+    text-decoration: none;
+    text-align: center;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn.accent {
+    /* Coba Lagi (Primary) */
+    background: #10b981; 
+    color: white;
+}
+
+.btn.accent:hover {
+    background: #059669;
+}
+
+.btn.ghost {
+    /* Kembali ke Home (Secondary) */
+    background: transparent;
+    color: #475569;
+    border: 2px solid #e6e9f2;
+}
+
+.btn.ghost:hover {
+    background: #f1f5f9;
+}
+
+.fade-in{
+    animation: fadeIn .6s ease both;
+}
+
+@keyframes fadeIn{
+    from{opacity:0;transform:translateY(15px)}
+    to{opacity:1;transform:translateY(0)}
+}

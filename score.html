@@ -3,38 +3,43 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Quiz - IPA Pronunciation</title>
-<link rel="stylesheet" href="style/quiz.css">
+<title>Score - Hasil Kuis IPA</title>
+<link rel="stylesheet" href="style/score.css">
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">IPA Quiz</div>
-    <div id="timer" class="timer">30:00</div>
-  </header>
+    <header class="topbar">
+        <div class="brand">IPA Quiz</div>
+        <div id="timer" class="timer">00:00</div> 
+    </header>
 
-  <main class="container fade-in">
-    <div id="quiz-area" class="quiz-area"></div>
-    
-    <div id="navigation-controls" class="controls">
-      </div>
-  </main>
+    <main class="container fade-in">
+        <div id="quiz-area" class="quiz-area">
+            <div class="result-card">
+                <h2>Selamat, <span id="name">Putri</span>!</h2>
+                <p>Berikut adalah hasil akhir Kuis IPA Anda.</p>
+                <hr>
+                
+                <div class="score-display">
+                    <h1 id="score">0%</h1>
+                    <p id="grade" class="grade-label">Grade: ...</p>
+                </div>
 
-  <div id="player" class="audio-player" draggable="true">
-    <div class="player-top"><span id="player-title">Audio</span>
-      <div>
-        <button id="minimize" class="small">_</button>
-      </div>
-    </div>
-    <div class="player-body">
-      <audio id="audio" controls></audio>
-      <div class="player-actions">
-        <input id="audio-word" placeholder="word (optional)" />
-        <button id="play-word" class="small">Play</button>
-      </div>
-      <p class="help">Audio & IPA fetched from dictionaryapi.dev when available.</p>
-    </div>
-  </div>
+                <div class="summary-details">
+                    <p id="correct-count">Jawaban Benar: 0 / 30</p>
+                </div>
+                
+                <div id="navigation-controls" class="actions"> 
+                    <button id="home" class="btn ghost">Kembali ke Home</button>
+                    <button id="retry" class="btn accent">Coba Lagi</button>
+                </div>
 
-<script src="js/quiz.js"></script>
+                <h4 style="margin-top: 30px;">Tinjauan Jawaban:</h4>
+                <ul id="key" class="answer-key">
+                    <li>Memuat hasil...</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+    <script src="js/score.js"></script>
 </body>
 </html>
