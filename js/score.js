@@ -4,25 +4,25 @@
 // === SESSION CHECK (12 HOUR EXPIRATION) ===
 // =======================================================
 
-const EXPIRATION_TIME = 43200000; // 12 hours in ms (Harus didefinisikan di setiap file yang dilindungi)
+const EXPIRATION_TIME = 43200000; // 12 hours in ms (Must be defined in each protected file)
 
 function checkAuthAndExpiration() {
     const isLoggedIn = localStorage.getItem('isLoggedIn');
     const loginTimestamp = localStorage.getItem('loginTimestamp');
     
-    // Cek Status Login dan Keberadaan Timestamp
+    // Check login status and existence of timestamp
     if (isLoggedIn !== 'true' || !loginTimestamp) {
-        returnToLogin("Sesi tidak ditemukan. Mohon login terlebih dahulu.");
+        returnToLogin("Session not found. Please log in first.");
         return false;
     }
 
-    // Cek Waktu Kedaluwarsa
+    // Check expiration time
     const currentTime = Date.now();
     const timeElapsed = currentTime - parseInt(loginTimestamp);
 
     if (timeElapsed > EXPIRATION_TIME) {
         localStorage.clear(); 
-        returnToLogin("Sesi Anda telah kedaluwarsa (12 jam). Mohon login kembali.");
+        returnToLogin("Your session has expired (12 hours). Please log in again.");
         return false;
     }
     return true; 
@@ -33,17 +33,17 @@ function returnToLogin(message) {
     window.location.href = "index.html";
 }
 
-// PANGGIL FUNGSI INI SEBELUM KODE LAIN BERJALAN
+// CALL THIS FUNCTION BEFORE ANY OTHER CODE
 if (!checkAuthAndExpiration()) {
     // Stop execution if authentication fails
     throw new Error("Authentication failed, redirected to login.");
 }
 
 // =======================================================
-// === KODE INTI SCORE ===================================
+// === SCORE LOGIC =======================================
 // =======================================================
 
-// Array Jawaban Benar (disalin dari quiz.js agar skor dapat dihitung)
+// Correct Answers Array (copied from quiz.js to calculate score)
 const LOCAL = [
     {word:'ship', ipa:'/ʃɪp/'},{word:'sheep',ipa:'/ʃiːp/'},{word:'beat',ipa:'/biːt/'},{word:'bit',ipa:'/bɪt/'},
     {word:'bed',ipa:'/bɛd/'},{word:'bad',ipa:'/bæd/'},{word:'father',ipa:'/ˈfɑːðər/'},{word:'lot',ipa:'/lɑt/'},
@@ -55,9 +55,9 @@ const LOCAL = [
     {word:'water',ipa:'/ˈwɔːtər/'},{word:'mirror',ipa:'/ˈmɪrər/'}
 ];
 
-// Ambil Data dari Local Storage (Menggunakan kunci baru: 'quizAnswers' dan 'currentUserName')
+// Retrieve stored answers and current user name
 const storedAnswers = localStorage.getItem('quizAnswers');
-const name = localStorage.getItem('currentUserName') || 'Student'; // Menggunakan kunci baru
+const name = localStorage.getItem('currentUserName') || 'Student';
 
 document.getElementById('name').textContent = name;
 
@@ -68,15 +68,14 @@ try {
     answers = []; 
 }
 
-// Logika PENTING: Jika tidak ada jawaban, alihkan untuk mencegah error
+// IMPORTANT LOGIC: Redirect if no answers to prevent errors
 if (answers.length === 0 || answers.length < LOCAL.length) {
-    alert('Data kuis tidak lengkap atau tidak ditemukan. Mohon ulangi kuis.');
-    window.location.href = 'rules.html'; // Mengalihkan ke halaman aturan
+    alert('Quiz data is incomplete or not found. Please retake the quiz.');
+    window.location.href = 'rules.html'; // Redirect to rules page
     throw new Error("Missing quiz data.");
 }
 
-
-// --- Proses Penghitungan Skor ---
+// --- Score Calculation ---
 let correct = 0;
 for(let i = 0; i < LOCAL.length; i++){
     const right = LOCAL[i].ipa;
@@ -89,16 +88,15 @@ for(let i = 0; i < LOCAL.length; i++){
 const totalQuestions = LOCAL.length;
 const percent = Math.round((correct / totalQuestions) * 100);
 
-// Ambil elemen untuk menampilkan hasil
+// Elements to display results
 const scoreEl = document.getElementById('score');
 const gradeEl = document.getElementById('grade');
 const correctCountEl = document.getElementById('correct-count');
 
-// Tampilkan jumlah benar/total
-correctCountEl.textContent = `Jawaban Benar: ${correct} / ${totalQuestions}`;
+// Display correct answers / total
+correctCountEl.textContent = `Correct Answers: ${correct} / ${totalQuestions}`;
 
-
-// --- Animasi Hitung Skor (Count-up animation) ---
+// --- Score Count-up Animation ---
 let start = 0; 
 const duration = 1200; 
 let startTime = null;
@@ -109,7 +107,7 @@ function animate(now){
     const val = Math.round(start + (percent - start) * t);
     scoreEl.textContent = val + '%';
     
-    // Perbarui warna berdasarkan persentase saat animasi berjalan
+    // Update color based on percentage
     scoreEl.style.color = (val >= 75) ? '#065f46' : (val >= 60 ? '#f59e0b' : '#dc2626');
 
     if(t < 1) {
@@ -120,51 +118,49 @@ function animate(now){
 }
 
 function finalize(){
-    // Tentukan Grade
-    let g = 'D (Kurang)';
-    if(percent >= 90) g = 'A (Sangat Baik)'; 
-    else if(percent >= 75) g = 'B (Baik)'; 
-    else if(percent >= 60) g = 'C (Cukup)';
+    // Determine Grade
+    let g = 'D (Poor)';
+    if(percent >= 90) g = 'A (Excellent)'; 
+    else if(percent >= 75) g = 'B (Good)'; 
+    else if(percent >= 60) g = 'C (Fair)';
     
     gradeEl.textContent = 'Grade: ' + g;
 
-    // --- Tampilkan Kunci Jawaban ---
+    // --- Display Answer Key ---
     const key = document.getElementById('key');
-    key.innerHTML = ''; // Kosongkan placeholder
+    key.innerHTML = ''; // Clear placeholder
 
     LOCAL.forEach((q, idx) => {
         const li = document.createElement('li');
-        const given = answers[idx] || '(Tidak Dijawab)';
+        const given = answers[idx] || '(Not Answered)';
         const isCorrect = (given === q.ipa);
         
-        // Tambahkan styling
-        li.style.color = isCorrect ? '#065f46' : '#dc2626'; // Hijau untuk benar, Merah untuk salah
+        // Add styling
+        li.style.color = isCorrect ? '#065f46' : '#dc2626'; // Green for correct, Red for incorrect
         li.style.fontWeight = isCorrect ? 'bold' : 'normal';
 
         li.innerHTML = `
             ${idx + 1}. 
-            <strong>${q.word}</strong> — Benar: ${q.ipa} — Jawaban Anda: ${given}
-            ${!isCorrect && given !== '(Tidak Dijawab)' ? ' (SALAH)' : ''}
+            <strong>${q.word}</strong> — Correct: ${q.ipa} — Your Answer: ${given}
+            ${!isCorrect && given !== '(Not Answered)' ? ' (WRONG)' : ''}
         `;
         key.appendChild(li);
     });
     
-    // !!! PENTING: Hapus semua data progres kuis setelah skor final ditampilkan !!!
+    // !!! IMPORTANT: Clear all quiz progress data after final score is displayed !!!
     localStorage.removeItem('quizAnswers');
     localStorage.removeItem('quizIndex');
     localStorage.removeItem('timeLeft');
 }
 
-// Mulai animasi
+// Start animation
 requestAnimationFrame(animate);
 
-// --- Event Listeners untuk Navigasi ---
+// --- Navigation Event Listeners ---
 document.getElementById('home').addEventListener('click', () => { 
-    // Kembali ke home (login screen)
     window.location.href = 'index.html'; 
 });
 
 document.getElementById('retry').addEventListener('click', () => { 
-    // Mulai ulang dari rules (semua data progres sudah dihapus di finalize())
     window.location.href = 'rules.html'; 
 });
